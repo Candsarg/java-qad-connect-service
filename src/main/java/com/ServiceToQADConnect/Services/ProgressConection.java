@@ -223,7 +223,7 @@ public class ProgressConection {
 	public boolean callRebucketingOnServer (String site, RebucketingRequest rebuckRequest){
 		
 		Boolean success = false;
-		
+		Log report1 = new Log();
 		ParamArray parms = new ParamArray(3);
 		ProResultSetMetaDataImpl proMetaData = new ProResultSetMetaDataImpl(8) ;
 		
@@ -235,7 +235,7 @@ public class ProgressConection {
 			}
 
 			// Meta data object(tabla temporal)  
-			ProDataObjectMetaData proDataObjectMetaData = new ProDataObjectMetaData("tt_xxinit_table",7,false,1,"","","");
+			ProDataObjectMetaData proDataObjectMetaData = new ProDataObjectMetaData("tt_xxinit_table",8,false,1,"","","");
 			proDataObjectMetaData.setFieldMetaData(1,"tt_xxintib_dom",0,Parameter.PRO_CHARACTER,0,0);
 			proDataObjectMetaData.setFieldMetaData(2,"tt_xxintib_seq",0,Parameter.PRO_INTEGER,0,0);
 			proDataObjectMetaData.setFieldMetaData(3,"tt_xxintib_datetime",0,Parameter.PRO_CHARACTER,0,0);
@@ -274,6 +274,12 @@ public class ProgressConection {
 			parms.addCharacter(1,site,ParamArrayMode.INPUT);
 			parms.addLogical(2,success,ParamArrayMode.OUTPUT);
 			this.connection.runProc(this.program, parms);
+
+			report1.fileLog(this.site,this.logRoute,"Returned successfully from Progress procedure.", "INFO");
+
+        	success = (Boolean) parms.getOutputParameter(2);
+
+        	report1.fileLog(this.site,this.logRoute,"Progress returned ip_statuslog = " + success, "INFO");
 		} catch (Exception e) {
 			this.print_Errors(e);
 		}
