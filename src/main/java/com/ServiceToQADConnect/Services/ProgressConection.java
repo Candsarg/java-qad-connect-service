@@ -17,7 +17,7 @@ import com.ServiceToQADConnect.Configs.Log;
 import com.ServiceToQADConnect.Exceptions.ErrorInServer;
 
 
-public class ProgressConection {
+public class ProgressConection implements AutoCloseable {
 	
 	private OpenAppObject connection;
 	private String program;
@@ -286,18 +286,27 @@ public class ProgressConection {
 		return success;
 	}
 
-	public void closeConnection() {
+	/**
+	 * Releases the OpenEdge AppServer object. Safe to call more than once.
+	 * This method is invoked automatically when this class is used in a
+	 * try-with-resources statement.
+	 */
+	@Override
+	public void close() {
+		OpenAppObject connectionToRelease = this.connection;
+		this.connection = null;
 
-		try {
-
-			if (this.connection != null) {
-				this.connection._release();
+		if (connectionToRelease != null) {
+			try {
+				connectionToRelease._release();
+			} catch (Exception e) {
+				this.print_Errors(e);
 			}
-
-		} catch (Exception e) {
-
-			this.print_Errors(e);
-
 		}
+	}
+
+	/** Retained for compatibility with any existing callers. */
+	public void closeConnection() {
+		close();
 	}
 }

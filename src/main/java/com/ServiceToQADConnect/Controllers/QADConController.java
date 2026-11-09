@@ -153,14 +153,14 @@ public class QADConController {
 		}
 		info = "Starting Connection whith Progress";
 		report.consoleLog(info, STATUS_INFO);
-		ProgressConection connectProg = new ProgressConection(
+		try (ProgressConection connectProg = new ProgressConection(
 			site,
 			url,
 			SesMode,
 			Appserver,
 			connector,
 			certStore
-		);
+		)) {
 
 		ResultSet ret = connectProg.fetchTableDataCallOnServer(site,tableName,whereClause,maxRecord);
 
@@ -180,9 +180,10 @@ public class QADConController {
 
 		JSONArray Json = convert_resulset_to_JsonArray(report, ret);
 
-		connectProg.closeConnection();
 		ret=null;
 		return Json;		
+	
+		}
 	}
 
 	/**
@@ -246,14 +247,14 @@ public class QADConController {
 		}
 		info = "Starting Connection whith Progress";
 		report.consoleLog(info, STATUS_INFO);
-		ProgressConection connectProg = new ProgressConection(
+		try (ProgressConection connectProg = new ProgressConection(
 			site,
 			url,
 			SesMode,
 			Appserver,
 			connector,
 			certStore
-		);
+		)) {
 
 		ResultSet ret = connectProg.fetchMrpDataCallOnServer(site,material);
 
@@ -273,9 +274,10 @@ public class QADConController {
 
 		JSONArray Json = convert_resulset_to_JsonArray(report, ret);
 
-		connectProg.closeConnection();
 		ret=null;
 		return Json;		
+	
+		}
 	}
 
 	/**
@@ -341,14 +343,14 @@ public class QADConController {
 		}
 		info = "Starting Connection whith Progress";
 		report.consoleLog(info, STATUS_INFO);
-		ProgressConection connectProg = new ProgressConection(
+		try (ProgressConection connectProg = new ProgressConection(
 			site,
 			url,
 			SesMode,
 			Appserver,
 			connector,
 			certStore
-		);
+		)) {
 
 		ResultSet ret = connectProg.fetchSyncDataCallOnServer(site,startSeq,maxRecord);
 
@@ -368,9 +370,10 @@ public class QADConController {
 
 		JSONArray Json = convert_resulset_to_JsonArray(report, ret);
 
-		connectProg.closeConnection();
 		ret=null;
 		return Json;		
+	
+		}
 	}
 
 	/**
@@ -442,14 +445,14 @@ public class QADConController {
 
 		String site = request.getSite();
 
-		ProgressConection connectProg = new ProgressConection(
+		try (ProgressConection connectProg = new ProgressConection(
 			site,
 			url,
 			SesMode,
 			Appserver,
 			connector,
 			certStore
-		);
+		)) {
 
 		boolean lSuccess = connectProg.callRebucketingOnServer(site, request);
 
@@ -467,8 +470,9 @@ public class QADConController {
 		info = "Finish Connection whith Progress";
 		report.consoleLog(info, STATUS_INFO);
 
-		connectProg.closeConnection();
 		return lSuccess;		
+	
+		}
 	}
 
 	/**
